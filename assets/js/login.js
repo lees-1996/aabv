@@ -1,3 +1,4 @@
+// 点击去注册和去登录按钮　　切换页面　隐藏显示
 $(function() {
     $('#link_reg').on('click', function() {
         $('.login-box').hide()
@@ -9,9 +10,10 @@ $(function() {
     })
 })
 
-// 从layui中获取form对象
+// 从layui中获取表单form对象  及时从layui中导出后使用
 var form = layui.form
     // 通过form.verify()函数自定义校验规则
+    // layer是layui中的弹出层的类 layer.msg(res.message) 
 var layer = layui.layer
 form.verify({
     // 自定义一个叫做pwd校验规则
@@ -19,7 +21,7 @@ form.verify({
         /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
     ],
     repwd: function(value) {
-        // 通过形参拿到的是确认密码框中的内容 还需要拿到密码框中的内容
+        // 通过形参拿到的是确认密码框value中的内容 还需要拿到密码框pwd中的内容
         // 然后进行一次等于的判断  如果判断失败 则return一个提示消息即可
         var pwd = $('.reg-box [name=password]').val()
             // 这里的问题，这里少个空格
@@ -34,7 +36,9 @@ form.verify({
 
 
 
-// 监听注册表单的提交
+// 监听注册表单form_reg的提交　看api文档 阻止表单默认提交行为
+// 请求的类型 地址 数据 执行回调函数  判断res.status 是否= 0
+// =0 就是成功 不等于就是失败  成功了基于打印注册成功 请登录 直接跳转到登录页面
 $('#form_reg').on('submit', function(e) {
     var data = {
         username: $('#form_reg [name=username]').val(),
@@ -52,7 +56,8 @@ $('#form_reg').on('submit', function(e) {
 })
 
 // 监听登录表单的提交事件
-
+// 阻止表单默认提交行为 发起ajax请求 指定请求类型 地址 数据 成功后的回调函数
+// 由status的值判断是否成功 =0就是成功 不等就是失败
 $('#form_login').submit(function(e) {
     e.preventDefault()
     $.ajax({
